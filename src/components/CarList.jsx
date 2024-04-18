@@ -2,7 +2,7 @@ import { AgGridReact } from "ag-grid-react";
 import { useEffect, useState } from "react"
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-material.css";
-import { Button, Snackbar } from "@mui/material";
+import { Button, Link, Snackbar } from "@mui/material";
 import Addnewcar from "./Addnewcar";
 import Editcar from "./Editcar";
 
@@ -25,6 +25,12 @@ export default function CarList() {
         {field: 'fuel', sortable: true, filter: true},
         {field: 'year', sortable: true, filter: true},
         {field: 'price', sortable: true, filter: true},
+        {
+            sortable:true,
+            fielter:true,
+            width:100,
+            cellRenderer: row => <Editcar car={row.data} updateCar={updateCar}/>
+        },
         {
             cellRenderer: (params) =>
                 <Button
@@ -63,7 +69,7 @@ export default function CarList() {
                     if (response.ok) {
 
                         setOpenSnackbar(true);
-                        setMsgSnackbar("The car was deleted successfuly!")
+                        setMsgSnackbar("The car was deleted successfully!")
                         getCars(); // haetaan tietokannasta tuore/päivitetty auto tilanne
                     }
 
@@ -96,6 +102,28 @@ export default function CarList() {
             } else {
                 setOpenSnackbar(true);
                 setMsgSnackbar("Something went wrong with saving the car.");
+            }
+        })
+        .catch(error => console.error(error));
+    }
+
+    const updateCar = (car, link) =>{
+        fetch(link,{
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(car)
+        }
+         )
+         .then(response => {
+            if (response.ok) {
+                setOpenSnackbar(true);
+                setMsgSnackbar("The car was updated successfully!");
+                getCars(); // Fetch the updated car list after successfully saving
+            } else {
+                setOpenSnackbar(true);
+                setMsgSnackbar("Something went wrong with updating the car.");
             }
         })
         .catch(error => console.error(error));

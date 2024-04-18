@@ -17,6 +17,12 @@ export default function Editcar(props) {
     });
 
     const handleClickOpen = () => {
+        setCar({brand: props.car.brand,
+                model: props.car.model, 
+                color: props.car.color,
+                fuel: props.car.fuel,
+                year: props.car.year,
+                price: props.car.price,});
         setOpen(true);
     };
 
@@ -29,14 +35,14 @@ export default function Editcar(props) {
 
     };
 
-    const addCar =() => {
-        props.saveCar(car);
+    const updateCar =() => {
+        props.updateCar(car, props.car._links.car.href);
         handleClose();
     }
 
     return (
         <div>
-            <Button variant="outlined" color="primary" onClick={handleClickOpen}>
+            <Button  color="primary" onClick={handleClickOpen}>
                 Edit
             </Button>
             <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
@@ -96,7 +102,7 @@ export default function Editcar(props) {
                     <Button onClick={handleClose} color="primary">
                         Cancel
                     </Button>
-                    <Button onClick={addCar} color="primary">
+                    <Button onClick={updateCar} color="primary">
                         Save
                     </Button>
                 </DialogActions>
